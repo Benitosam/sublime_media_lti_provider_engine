@@ -1,4 +1,4 @@
 module LtiProvider
-  class Tool < ApplicationRecord
+  class Tool < ActiveRecord::Base
   end
 end
