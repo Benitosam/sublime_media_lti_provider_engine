@@ -5,7 +5,10 @@ module LtiProvider
     skip_before_action :require_lti_launch
 
     def launch
-      provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], LtiProvider::Config.secret, params)
+      # provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], LtiProvider::Config.secret, params)
+      oauth_details = LtiProvider::Tool.where(uuid: params['oauth_consumer_key']).first
+      # provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], LtiProvider::Config.secret, params)
+      provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'],  oauth_details.shared_secret, params)
       launch = Launch.initialize_from_request(provider, request)
 
       if !launch.valid_provider?
