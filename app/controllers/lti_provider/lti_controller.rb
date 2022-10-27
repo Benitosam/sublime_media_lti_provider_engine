@@ -65,6 +65,7 @@ module LtiProvider
       session[:launch_presentation_return_url] = params[:launch_presentation_return_url]
       session[:ext_roles] = params[:ext_roles]
       session[:organization_id] = params[:organization_id]
+      session[:app_id] = params[:app_id]
     end
 
     protected
