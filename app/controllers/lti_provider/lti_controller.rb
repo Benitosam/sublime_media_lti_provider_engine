@@ -64,6 +64,7 @@ module LtiProvider
       session[:canvas_course_id] = params[:custom_canvas_course_id]
       session[:launch_presentation_return_url] = params[:launch_presentation_return_url]
       session[:ext_roles] = params[:ext_roles]
+      session[:key] = params[:oauth_consumer_key]
       # session[:organization_id] = params[:organization_id]
       # session[:app_id] = params[:app_id]
     end
