@@ -65,7 +65,8 @@ module LtiProvider
       session[:launch_presentation_return_url] = params[:launch_presentation_return_url]
       session[:ext_roles] = params[:ext_roles]
       session[:key] = params[:oauth_consumer_key]
-      # session[:organization_id] = params[:organization_id]
+      tool_detail = LtiProvider::Tool.where(uuid: session[:key]).first
+      session[:organization_id] = tool_detail.organization_id
       # session[:app_id] = params[:app_id]
     end
 
