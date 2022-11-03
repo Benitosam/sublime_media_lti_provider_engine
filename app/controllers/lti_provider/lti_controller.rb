@@ -67,6 +67,7 @@ module LtiProvider
       session[:key] = params[:oauth_consumer_key]
       tool_detail = LtiProvider::Tool.where(uuid: session[:key]).first
       session[:organization_id] = tool_detail.organization_id
+      session[:canvas_user_email] = params[:lis_person_contact_email_primary]
       # session[:app_id] = params[:app_id]
     end
 
