@@ -7,7 +7,7 @@ module LtiProvider
     def launch
       # provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], LtiProvider::Config.secret, params)
       oauth_details = LtiProvider::Tool.where(uuid: params['oauth_consumer_key']).first
-      if oauth_details.present?
+      if oauth_details.present? && oauth_details.domain == request.env["HTTP_ORIGIN"]
         # provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], LtiProvider::Config.secret, params)
         provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], oauth_details.shared_secret, params)
         launch = Launch.initialize_from_request(provider, request)
