@@ -8,26 +8,22 @@ module LtiProvider
       # provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], LtiProvider::Config.secret, params)
       oauth_details = LtiProvider::Tool.where(uuid: params['oauth_consumer_key']).first
       if oauth_details.present?
-        if request.origin == oauth_details.domain
-          # provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], LtiProvider::Config.secret, params)
-          provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], oauth_details.shared_secret, params)
-          launch = Launch.initialize_from_request(provider, request)
+        # provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], LtiProvider::Config.secret, params)
+        provider = IMS::LTI::ToolProvider.new(params['oauth_consumer_key'], oauth_details.shared_secret, params)
+        launch = Launch.initialize_from_request(provider, request)
 
-          if !launch.valid_provider?
-            msg = "#{launch.lti_errormsg} Please be sure you are launching this tool from the link provided in Canvas."
-            return show_error msg
-          elsif launch.save
-            session[:cookie_test] = true
-            redirect_url = provider.instance_variable_get(:@custom_params)['redirect_url']
-            redirect_to cookie_test_url + '?' + "nonce=#{launch.nonce}&redirect_url=#{redirect_url}&#{params.permit!.to_query}"
-          else
-            return show_error "Unable to launch #{LtiProvider::XmlConfig.tool_title}. Please check your External Tools configuration and try again."
-          end
+        if !launch.valid_provider?
+          msg = "#{launch.lti_errormsg} Please be sure you are launching this tool from the link provided in Canvas."
+          return show_error msg
+        elsif launch.save
+          session[:cookie_test] = true
+          redirect_url = provider.instance_variable_get(:@custom_params)['redirect_url']
+          redirect_to cookie_test_url + '?' + "nonce=#{launch.nonce}&redirect_url=#{redirect_url}&#{params.permit!.to_query}"
         else
-          redirect_to "#{request.base_url}/invalid_credential/app_in_use"
+          return show_error "Unable to launch #{LtiProvider::XmlConfig.tool_title}. Please check your External Tools configuration and try again."
         end
       else
-        redirect_to "#{request.base_url}/invalid_credential/invalid_key"
+        redirect_to "#{request.base_url}/invalid_credential"
       end
     end
 
@@ -81,8 +77,9 @@ module LtiProvider
     end
 
     protected
-      def show_error(message)
-        render text: message
-      end
+
+    def show_error(message)
+      render text: message
+    end
   end
 end
