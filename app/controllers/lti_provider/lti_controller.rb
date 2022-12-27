@@ -20,8 +20,7 @@ module LtiProvider
           domain = Domain.where(domain: oauth_details.domain).first
           domain_id = domain.id
           enrollment_validity = EnrollmentValidity.where(lms_course_id: session[:canvas_course_id], domain_id: domain_id).first_or_create!
-          # enrollment_validity.update(validity_days: 60, remainder_days: 10, apply_for: 'new_enrollments',
-          #                            added_by: session[:canvas_user_id])
+          enrollment_validity.update(apply_for: 'new_enrollments', added_by: session[:canvas_user_id])
           redirect_url = provider.instance_variable_get(:@custom_params)['redirect_url']
           redirect_to cookie_test_url + '?' + "nonce=#{launch.nonce}&redirect_url=#{redirect_url}&#{params.permit!.to_query}"
         else
